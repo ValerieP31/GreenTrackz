@@ -79,32 +79,6 @@ Seluruh logika data dikelola oleh objek global `GT` di `app.js`. Data disimpan d
 | `gt_budgets` | `Array` | Budget per kategori |
 | `gt_total_budget` | `Number` | Total budget / pendapatan bulanan |
 
-### Contoh Struktur Transaksi
-
-```json
-{
-  "id": "txn_1718000000000",
-  "name": "Makan Siang",
-  "amount": 45000,
-  "date": "2025-06-01",
-  "category": "makanan",
-  "type": "expense",
-  "note": "Warteg dekat kantor"
-}
-```
-
-### Contoh Struktur Kategori
-
-```json
-{
-  "id": "makanan",
-  "name": "Makanan",
-  "color": "#16A34A",
-  "bg": "#DCFCE7",
-  "icon": "makanan"
-}
-```
-
 ---
 
 ## 🎨 Kategori Default
@@ -157,19 +131,6 @@ Kamu bisa menambahkan kategori baru dengan nama dan warna pilihan (merah, orange
 
 ---
 
-## 🙌 Kontribusi
-
-Pull request dan issue sangat disambut! Jika kamu menemukan bug atau punya ide fitur baru, silakan buka issue di [GitHub](https://github.com/ValerieP31/GreenTrackz).
-
----
-
 ## 📄 Lisensi
 
 Proyek ini open source dan bebas digunakan untuk keperluan pribadi maupun edukasi.
-
----
-
-<div align="center">
-  <strong>🌿 GreenTrackz</strong> — Catat. Pantau. Kendalikan.<br>
-  Dibuat dengan ❤️ oleh <a href="https://github.com/ValerieP31">ValerieP31</a>
-</div>
