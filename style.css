@@ -122,6 +122,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;   /* prevent horizontal scroll on all pages */
 }
 
 body {
@@ -132,6 +133,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;   /* prevent horizontal scroll on all pages */
 }
 
 a {
@@ -1410,6 +1412,8 @@ input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: var(--space-md);
 }
 
