@@ -8,6 +8,126 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Dashboard: recent transactions header ── */
+    .dash-txns-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .dash-txns-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .dash-search-wrap {
+      position: relative;
+    }
+    .dash-search-icon {
+      width: 14px;
+      height: 14px;
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+    .dash-search-input {
+      padding: 8px 12px 8px 32px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      outline: none;
+      width: 180px;
+      background: var(--color-bg);
+      font-family: inherit;
+    }
+    .dash-search-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(123,200,164,.15);
+    }
+    .dash-filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      outline: none;
+      background: var(--color-bg);
+      cursor: pointer;
+      font-family: inherit;
+      max-width: 140px;
+    }
+    .dash-filter-select:focus {
+      border-color: var(--color-primary);
+    }
+
+    /* ── Mobile overrides ── */
+    @media (max-width: 600px) {
+      /* Prevent any horizontal overflow */
+      html, body { overflow-x: hidden; max-width: 100%; }
+
+      .dash-txns-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .dash-txns-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .dash-search-input {
+        width: 100%;
+      }
+      .dash-filter-select {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* Stats cards — stack vertically */
+      .stats-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Page header stack */
+      .page-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      /* Stat value font size — prevent overflow on very small amounts */
+      .stat-value {
+        font-size: 20px !important;
+        word-break: break-all;
+      }
+
+      /* Recent txns card padding */
+      .recent-txns {
+        padding: 16px !important;
+      }
+
+      /* Transaction item — tighten on mobile */
+      .txn-item {
+        gap: 8px;
+      }
+      .txn-right {
+        text-align: right;
+        min-width: 0;
+      }
+      .txn-amount {
+        font-size: 13px;
+      }
+      .tag {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -86,18 +206,18 @@
 
       <!-- Recent Transactions -->
       <div class="recent-txns" style="margin-top:var(--space-2xl);">
-        <div class="recent-txns-header">
+        <div class="dash-txns-header">
           <h2 class="recent-txns-title">Transaksi Terbaru</h2>
-          <div style="display:flex;gap:8px;align-items:center;">
+          <div class="dash-txns-controls">
             <!-- Search -->
-            <div style="position:relative;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);pointer-events:none;">
+            <div class="dash-search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dash-search-icon">
                 <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
               </svg>
-              <input type="text" id="dash-search" placeholder="Cari transaksi..." style="padding:8px 12px 8px 34px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:13px;outline:none;width:200px;background:var(--color-bg);" oninput="renderDashboard()">
+              <input type="text" id="dash-search" placeholder="Cari transaksi..." class="dash-search-input" oninput="renderDashboard()">
             </div>
             <!-- Filter -->
-            <select id="dash-filter" onchange="renderDashboard()" style="padding:8px 12px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:13px;outline:none;background:var(--color-bg);cursor:pointer;">
+            <select id="dash-filter" onchange="renderDashboard()" class="dash-filter-select">
               <option value="">Semua Kategori</option>
             </select>
           </div>
