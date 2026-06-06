@@ -1,6 +1,6 @@
 # 🌿 GreenTrackz
 
-**GreenTrackz** adalah aplikasi pencatat keuangan pribadi berbasis web yang ringan, cepat, dan tidak memerlukan login. Dirancang untuk membantu kamu mencatat pengeluaran harian, mengatur budget bulanan, dan memantau kesehatan keuanganmu. Semuanya tersimpan langsung di browser tanpa server.
+**GreenTrackz** adalah aplikasi pencatat keuangan pribadi berbasis web yang ringan, cepat, dan tidak memerlukan login. Dirancang untuk membantu kamu mencatat pengeluaran harian, mengatur budget bulanan, dan memantau kesehatan keuanganmu — semuanya tersimpan langsung di browser tanpa server.
 
 ---
 
@@ -152,10 +152,24 @@ Kamu bisa menambahkan kategori baru dengan nama dan warna pilihan (merah, orange
 
 - Data tersimpan **hanya di browser** yang kamu gunakan. Membersihkan cache/data browser akan menghapus semua data.
 - Maksimal **300 transaksi** dapat disimpan untuk menjaga performa.
-- Ekspor CSV tersedia di halaman **Transaksi** (tombol "Ekspor CSV"). File berformat UTF-8 BOM dan kompatibel dengan Excel.
-- Tidak ada fitur sinkronisasi antar perangkat, ini adalah desain yang disengaja untuk menjaga privasi.
+- Ekspor CSV tersedia di halaman **Transaksi** (tombol "Ekspor CSV") — file berformat UTF-8 BOM dan kompatibel dengan Excel.
+- Tidak ada fitur sinkronisasi antar perangkat — ini adalah desain yang disengaja untuk menjaga privasi.
+
+---
+
+## 🙌 Kontribusi
+
+Pull request dan issue sangat disambut! Jika kamu menemukan bug atau punya ide fitur baru, silakan buka issue di [GitHub](https://github.com/ValerieP31/GreenTrackz).
 
 ---
 
 ## 📄 Lisensi
+
 Proyek ini open source dan bebas digunakan untuk keperluan pribadi maupun edukasi.
+
+---
+
+<div align="center">
+  <strong>🌿 GreenTrackz</strong> — Catat. Pantau. Kendalikan.<br>
+  Dibuat dengan ❤️ oleh <a href="https://github.com/ValerieP31">ValerieP31</a>
+</div>

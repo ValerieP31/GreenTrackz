@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaksi - GreenTrackz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .type-toggle { display:flex; gap:8px; margin-bottom:16px; }
+    .type-btn {
+      flex:1; padding:10px; border:2px solid var(--color-border); border-radius:var(--radius-md);
+      font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; background:white;
+    }
+    .type-btn.active-expense { border-color:var(--color-danger); background:#FEF2F2; color:var(--color-danger); }
+    .type-btn.active-income  { border-color:var(--color-success); background:#F0FDF4; color:var(--color-success); }
+
+    /* modal */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:white; border-radius:var(--radius-xl); padding:32px; width:440px; max-width:95vw; box-shadow:var(--shadow-lg); }
+    .modal-title { font-size:var(--text-xl); font-weight:700; margin-bottom:20px; }
+    .modal-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
+
+    .empty-state { text-align:center; padding:60px 20px; color:var(--color-text-muted); }
+    .empty-state svg { width:48px; height:48px; margin:0 auto 16px; display:block; opacity:.35; }
+    .empty-state p { font-size:15px; }
+    .empty-state small { font-size:13px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </a>
+      <nav class="nav" style="margin-left:auto;">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="category.html" class="nav-link">Kategori</a>
+        <a href="budgeting.html" class="nav-link">Budget</a>
+        <a href="transactions.html" class="nav-link active">Transaksi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="container">
+
+      <div class="page-header">
+        <div class="page-header-inner" style="flex-direction:column;align-items:flex-start;">
+          <div>
+            <h1 class="page-title">Transaksi</h1>
+            <p class="page-subtitle">Kelola pemasukan dan pengeluaran Anda di sini.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+
+        <!-- Left: Add Form -->
+        <div class="txn-form-card">
+          <div class="section-title-with-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+            </svg>
+            Tambah Transaksi
+          </div>
+
+          <!-- Type toggle: only expense; income managed via Budget -->
+          <div class="type-toggle">
+            <button id="btn-expense" class="type-btn active-expense" onclick="setType('expense')" style="cursor:default;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:inline;margin-right:4px;vertical-align:middle;">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+              Pengeluaran
+            </button>
+          </div>
+          <p style="font-size:12px;color:var(--color-text-muted);margin-top:-8px;margin-bottom:16px;">
+            💡 Untuk mengatur pemasukan/total budget, buka halaman <a href="budgeting.html" style="color:var(--color-primary);">Budget →</a>
+          </p>
+
+          <div class="form-group">
+            <label class="form-label">Nama Transaksi</label>
+            <input type="text" id="txn-name" class="form-input" placeholder="Contoh: Kopi Sore">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jumlah (Rp)</label>
+            <input type="number" id="txn-amount" class="form-input" placeholder="0" min="0">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tanggal</label>
+              <input type="date" id="txn-date" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select id="txn-category" class="form-select"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan (Opsional)</label>
+            <textarea id="txn-note" class="form-textarea" placeholder="Tambahkan detail..."></textarea>
+          </div>
+          <div id="txn-limit-warn" style="display:none;background:#FEF9C3;border:1px solid #EAB308;border-radius:8px;padding:10px 14px;font-size:13px;color:#92400E;margin-bottom:12px;">
+            ⚠️ Batas 300 transaksi telah tercapai. Hapus beberapa transaksi lama untuk menambah yang baru.
+          </div>
+          <button class="btn btn-primary btn-full" onclick="addTransaction()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Transaksi
+          </button>
+        </div>
+
+        <!-- Right: History -->
+        <div class="txn-history-card">
+          <div class="txn-history-header">
+            <h2 class="txn-history-title">Riwayat Transaksi</h2>
+            <div class="toolbar">
+              <!-- Export CSV -->
+              <button class="toolbar-btn" onclick="GT.exportCSV()" title="Ekspor ke CSV">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="8 13 12 17 16 13"/><line x1="12" y1="17" x2="12" y2="11"/></svg>
+                Ekspor CSV
+              </button>
+              <!-- Search -->
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="txn-search" placeholder="Cari nama..." style="padding:7px 10px 7px 30px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:12px;outline:none;width:150px;" oninput="renderHistory()">
+              </div>
+              <!-- Filter -->
+              <select id="txn-filter-cat" onchange="renderHistory()" style="padding:7px 10px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:12px;outline:none;cursor:pointer;background:white;">
+                <option value="">Semua</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container" style="border:none;box-shadow:none;border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Nama</th>
+                  <th>Kategori</th>
+                  <th>Jumlah</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="txn-tbody">
+                <!-- JS rendered -->
+              </tbody>
+            </table>
+            <div id="txn-empty" class="empty-state" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              <p>Belum ada transaksi</p>
+              <small>Tambahkan transaksi pertama Anda di sebelah kiri!</small>
+            </div>
+          </div>
+
+          <div class="pagination" id="pagination"></div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-box">
+      <div class="modal-title">Edit Transaksi</div>
+      <input type="hidden" id="edit-txn-id">
+      <div class="type-toggle" style="display:none;">
+        <button id="edit-btn-expense" class="type-btn active-expense" onclick="setEditType('expense')">Pengeluaran</button>
+        <button id="edit-btn-income"  class="type-btn" onclick="setEditType('income')">Pemasukan</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Transaksi</label>
+        <input type="text" id="edit-txn-name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah (Rp)</label>
+        <input type="number" id="edit-txn-amount" class="form-input" min="0">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tanggal</label>
+          <input type="date" id="edit-txn-date" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kategori</label>
+          <select id="edit-txn-category" class="form-select"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catatan</label>
+        <textarea id="edit-txn-note" class="form-textarea"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveEdit()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ValerieP31/GreenTrackz" aria-label="GitHub" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const PER_PAGE = 10;
+    let currentPage = 1;
+    let currentType = 'expense';
+    let editCurrentType = 'expense';
+
+    // Set today as default date
+    document.getElementById('txn-date').value = new Date().toISOString().split('T')[0];
+
+    function populateCategorySelects() {
+      const cats = GT.getCategories();
+      const opts = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      document.getElementById('txn-category').innerHTML = opts;
+      document.getElementById('edit-txn-category').innerHTML = opts;
+      // filter dropdown
+      const fSel = document.getElementById('txn-filter-cat');
+      while (fSel.options.length > 1) fSel.remove(1);
+      cats.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name;
+        fSel.appendChild(o);
+      });
+    }
+
+    function setType(t) {
+      currentType = t;
+      document.getElementById('btn-expense').className = 'type-btn' + (t === 'expense' ? ' active-expense' : '');
+      document.getElementById('btn-income').className  = 'type-btn' + (t === 'income'  ? ' active-income'  : '');
+    }
+
+    function setEditType(t) {
+      editCurrentType = t;
+      document.getElementById('edit-btn-expense').className = 'type-btn' + (t === 'expense' ? ' active-expense' : '');
+      document.getElementById('edit-btn-income').className  = 'type-btn' + (t === 'income'  ? ' active-income'  : '');
+    }
+
+    function addTransaction() {
+      const txns = GT.getTransactions();
+      if (txns.length >= GT.MAX_TRANSACTIONS) {
+        document.getElementById('txn-limit-warn').style.display = 'block';
+        return;
+      }
+      const name   = document.getElementById('txn-name').value.trim();
+      const amount = parseFloat(document.getElementById('txn-amount').value);
+      const date   = document.getElementById('txn-date').value;
+
+      // Inline validation
+      let hasError = false;
+      GT.clearFieldErrors('txn-name', 'txn-amount', 'txn-date');
+      if (!name)               { GT.setFieldError('txn-name', 'Nama transaksi tidak boleh kosong!'); hasError = true; }
+      if (!amount || amount <= 0) { GT.setFieldError('txn-amount', 'Jumlah harus lebih dari 0!'); hasError = true; }
+      if (!date)               { GT.setFieldError('txn-date', 'Tanggal tidak boleh kosong!'); hasError = true; }
+      if (hasError) return;
+
+      const cat  = document.getElementById('txn-category').value;
+      const note = document.getElementById('txn-note').value.trim();
+
+      txns.push({ id: 'txn_' + Date.now(), name, amount, date, category: cat, type: currentType, note });
+      GT.saveTransactions(txns);
+      GT.showToast('Transaksi berhasil ditambahkan!', 'success');
+
+      // Reset form
+      document.getElementById('txn-name').value   = '';
+      document.getElementById('txn-amount').value = '';
+      document.getElementById('txn-note').value   = '';
+      document.getElementById('txn-date').value   = new Date().toISOString().split('T')[0];
+      document.getElementById('txn-limit-warn').style.display = 'none';
+      currentPage = 1;
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const search    = document.getElementById('txn-search').value.toLowerCase();
+      const catFilter = document.getElementById('txn-filter-cat').value;
+      let txns = [...GT.getTransactions()].reverse();
+
+      if (search)    txns = txns.filter(t => t.name.toLowerCase().includes(search));
+      if (catFilter) txns = txns.filter(t => t.category === catFilter);
+
+      const total = txns.length;
+      const pages = Math.ceil(total / PER_PAGE) || 1;
+      if (currentPage > pages) currentPage = pages;
+
+      const start = (currentPage - 1) * PER_PAGE;
+      const slice = txns.slice(start, start + PER_PAGE);
+
+      const tbody = document.getElementById('txn-tbody');
+      const empty = document.getElementById('txn-empty');
+
+      if (total === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+        tbody.innerHTML = slice.map(t => {
+          const cat = GT.getCategoryById(t.category);
+          const isIncome = t.type === 'income';
+          const sign = isIncome ? '+' : '-';
+          const amtColor = isIncome ? 'var(--color-success)' : 'var(--color-danger)';
+          const d = new Date(t.date);
+          const dateStr = d.toLocaleDateString('id-ID', { day:'2-digit', month:'short' });
+          const yearStr = d.getFullYear();
+          return `<tr>
+            <td data-label="Tanggal"><div style="font-weight:600;">${dateStr}</div><div style="font-size:12px;color:var(--color-text-muted);">${yearStr}</div></td>
+            <td data-label="Nama"><div style="font-weight:600;">${t.name}</div>${t.note ? `<div style="font-size:12px;color:var(--color-text-muted);">${t.note}</div>` : ''}</td>
+            <td data-label="Kategori"><span class="tag" style="background:${cat.bg};color:${cat.color};">${cat.name.toUpperCase()}</span></td>
+            <td data-label="Jumlah" style="color:${amtColor};font-weight:600;">${sign}${GT.formatRp(t.amount)}</td>
+            <td data-label="Aksi">
+              <div class="table-actions">
+                <button class="action-btn edit" aria-label="Edit" onclick="openEditModal('${t.id}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="action-btn delete" aria-label="Hapus" onclick="deleteTransaction('${t.id}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+
+      // Pagination
+      renderPagination(pages, total);
+    }
+
+    function renderPagination(pages, total) {
+      const pg = document.getElementById('pagination');
+      if (pages <= 1 && total === 0) { pg.innerHTML = ''; return; }
+      const start = (currentPage - 1) * PER_PAGE + 1;
+      const end   = Math.min(currentPage * PER_PAGE, total);
+      let html = `<span class="pagination-info">Menampilkan ${start}–${end} dari ${total} transaksi</span>`;
+      html += `<button class="pagination-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>`;
+      // max 5 page buttons
+      const maxBtns = 5;
+      let startP = Math.max(1, currentPage - 2);
+      let endP   = Math.min(pages, startP + maxBtns - 1);
+      if (endP - startP < maxBtns - 1) startP = Math.max(1, endP - maxBtns + 1);
+      for (let i = startP; i <= endP; i++) {
+        html += `<button class="pagination-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      }
+      html += `<button class="pagination-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>`;
+      pg.innerHTML = html;
+    }
+
+    function goPage(p) {
+      const txns = GT.getTransactions();
+      const pages = Math.ceil(txns.length / PER_PAGE) || 1;
+      if (p < 1 || p > pages) return;
+      currentPage = p;
+      renderHistory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteTransaction(id) {
+      if (!confirm('Hapus transaksi ini?')) return;
+      GT.saveTransactions(GT.getTransactions().filter(t => t.id !== id));
+      renderHistory();
+      GT.showToast('Transaksi dihapus.', 'info');
+    }
+
+    function openEditModal(id) {
+      const t = GT.getTransactions().find(t => t.id === id);
+      if (!t) return;
+      document.getElementById('edit-txn-id').value       = t.id;
+      document.getElementById('edit-txn-name').value     = t.name;
+      document.getElementById('edit-txn-amount').value   = t.amount;
+      document.getElementById('edit-txn-date').value     = t.date;
+      document.getElementById('edit-txn-category').value = t.category;
+      document.getElementById('edit-txn-note').value     = t.note || '';
+      setEditType(t.type);
+      document.getElementById('edit-modal').classList.add('open');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+    }
+
+    function saveEdit() {
+      const id     = document.getElementById('edit-txn-id').value;
+      const name   = document.getElementById('edit-txn-name').value.trim();
+      const amount = parseFloat(document.getElementById('edit-txn-amount').value);
+      const date   = document.getElementById('edit-txn-date').value;
+      const cat    = document.getElementById('edit-txn-category').value;
+      const note   = document.getElementById('edit-txn-note').value.trim();
+
+      GT.clearFieldErrors('edit-txn-name', 'edit-txn-amount', 'edit-txn-date');
+      let hasError = false;
+      if (!name)               { GT.setFieldError('edit-txn-name', 'Nama tidak boleh kosong!'); hasError = true; }
+      if (!amount || amount <= 0) { GT.setFieldError('edit-txn-amount', 'Jumlah harus lebih dari 0!'); hasError = true; }
+      if (!date)               { GT.setFieldError('edit-txn-date', 'Tanggal tidak boleh kosong!'); hasError = true; }
+      if (hasError) return;
+
+      const txns = GT.getTransactions().map(t => {
+        if (t.id !== id) return t;
+        return { ...t, name, amount, date, category: cat, type: editCurrentType, note };
+      });
+      GT.saveTransactions(txns);
+      closeEditModal();
+      renderHistory();
+      GT.showToast('Transaksi berhasil diperbarui!', 'success');
+    }
+
+    populateCategorySelects();
+    renderHistory();
+    GT.initMobileNav('transactions.html');
+
+    // Clear errors on input
+    ['txn-name','txn-amount','txn-date'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', () => GT.setFieldError(id, ''));
+    });
+  </script>
+</body>
+</html>

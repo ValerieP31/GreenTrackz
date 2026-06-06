@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - GreenTrackz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </a>
+      <nav class="nav" style="margin-left:auto;">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="category.html" class="nav-link">Kategori</a>
+        <a href="budgeting.html" class="nav-link">Budget</a>
+        <a href="transactions.html" class="nav-link">Transaksi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====== MAIN ====== -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div><h1 class="page-title">Dashboard</h1></div>
+          <a href="transactions.html" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Catat Transaksi
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Saldo</span>
+            <div class="icon-circle-sm" style="background-color:var(--color-primary-light);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-saldo">Rp 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Budget Bulanan</span>
+            <div class="icon-circle-sm" style="background-color:#D1FAE5;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <polyline points="18 15 12 9 6 15"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-income" style="color:var(--color-success);">Rp 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Pengeluaran Bulan Ini</span>
+            <div class="icon-circle-sm" style="background-color:var(--icon-kuliner-bg);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value" id="stat-expense" style="color:var(--color-danger);">Rp 0</div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="recent-txns" style="margin-top:var(--space-2xl);">
+        <div class="recent-txns-header">
+          <h2 class="recent-txns-title">Transaksi Terbaru</h2>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <!-- Search -->
+            <div style="position:relative;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);pointer-events:none;">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="dash-search" placeholder="Cari transaksi..." style="padding:8px 12px 8px 34px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:13px;outline:none;width:200px;background:var(--color-bg);" oninput="renderDashboard()">
+            </div>
+            <!-- Filter -->
+            <select id="dash-filter" onchange="renderDashboard()" style="padding:8px 12px;border:1px solid var(--color-border);border-radius:var(--radius-full);font-size:13px;outline:none;background:var(--color-bg);cursor:pointer;">
+              <option value="">Semua Kategori</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="recent-txns-list" id="dash-txn-list">
+          <!-- populated by JS -->
+        </div>
+
+        <a href="transactions.html" class="view-all-link">
+          Lihat Semua Transaksi
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ValerieP31/GreenTrackz" aria-label="GitHub" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+    }
+
+    function populateFilterDropdown() {
+      const sel = document.getElementById('dash-filter');
+      const cats = GT.getCategories();
+      // keep first option
+      while (sel.options.length > 1) sel.remove(1);
+      cats.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name;
+        sel.appendChild(o);
+      });
+    }
+
+    function renderDashboard() {
+      const txns = GT.getTransactions();
+      const stats = GT.getMonthStats();
+
+      // Stats
+      document.getElementById('stat-saldo').textContent = GT.formatRp(stats.income - stats.expense);
+      document.getElementById('stat-income').textContent = GT.formatRp(stats.income);
+      document.getElementById('stat-expense').textContent = '-' + GT.formatRp(stats.expense);
+
+      // Filter + search
+      const search = document.getElementById('dash-search').value.toLowerCase();
+      const catFilter = document.getElementById('dash-filter').value;
+
+      let filtered = [...txns].reverse(); // newest first
+      if (search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search));
+      if (catFilter) filtered = filtered.filter(t => t.category === catFilter);
+
+      const list = document.getElementById('dash-txn-list');
+      if (filtered.length === 0) {
+        list.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--color-text-muted);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;display:block;opacity:.4;">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <p>Belum ada transaksi</p>
+        </div>`;
+        return;
+      }
+
+      const show = filtered.slice(0, 5);
+      list.innerHTML = show.map((t, i) => {
+        const cat = GT.getCategoryById(t.category);
+        const isIncome = t.type === 'income';
+        const sign = isIncome ? '+' : '-';
+        const amtColor = isIncome ? 'var(--color-success)' : 'var(--color-danger)';
+        const border = i === show.length - 1 ? 'border-bottom:none;' : '';
+        return `<div class="txn-item" style="${border}">
+          <div class="txn-left">
+            <div class="icon-circle" style="background-color:${cat.bg};">
+              ${GT.getCategoryIcon(cat.icon, cat.color)}
+            </div>
+            <div>
+              <div class="txn-info-name">${t.name}</div>
+              <div class="txn-info-date">${formatDate(t.date)}</div>
+            </div>
+          </div>
+          <div class="txn-right">
+            <span class="txn-amount" style="color:${amtColor};">${sign}${GT.formatRp(t.amount)}</span>
+            <span class="tag" style="background:${cat.bg};color:${cat.color};">${cat.name.toUpperCase()}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    populateFilterDropdown();
+    renderDashboard();
+    GT.initMobileNav('dashboard.html');
+  </script>
+</body>
+</html>

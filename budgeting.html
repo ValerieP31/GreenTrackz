@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget - GreenTrackz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* modal */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:200; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:white; border-radius:var(--radius-xl); padding:32px; width:420px; max-width:95vw; box-shadow:var(--shadow-lg); }
+    .modal-title { font-size:var(--text-xl); font-weight:700; margin-bottom:20px; }
+    .modal-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:24px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </a>
+      <nav class="nav" style="margin-left:auto;">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="category.html" class="nav-link">Kategori</a>
+        <a href="budgeting.html" class="nav-link active">Budget</a>
+        <a href="transactions.html" class="nav-link">Transaksi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="container">
+
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div>
+            <h1 class="page-title">Budget</h1>
+            <p class="page-subtitle">Tetapkan batas pengeluaran untuk mencapai tujuan finansial Anda.</p>
+          </div>
+          <div class="page-header-right">
+            <span class="page-header-label">Status Keuangan</span>
+            <span class="status-badge success" id="health-badge">Sangat Sehat</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Budget Bulanan Card -->
+      <div class="budget-overview" style="margin-bottom:var(--space-xl);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-lg);">
+          <div>
+            <div class="budget-main-label" style="font-size:var(--text-base);font-weight:700;color:var(--color-text-primary);margin-bottom:4px;">💰 Total Budget Bulanan</div>
+            <div style="font-size:13px;color:var(--color-text-muted);">Jumlah pendapatan / anggaran yang tersedia bulan ini</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="openTotalBudgetModal()" style="white-space:nowrap;gap:6px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Budget
+          </button>
+        </div>
+        <div class="budget-overview-grid">
+          <div>
+            <div class="budget-main-label">Total Budget</div>
+            <div class="budget-main-value" id="bud-total">Rp 0</div>
+            <div class="budget-sub-grid">
+              <div>
+                <div class="budget-sub-label">Pengeluaran Saat Ini</div>
+                <div class="budget-sub-value" id="bud-used">Rp 0</div>
+              </div>
+              <div>
+                <div class="budget-sub-label">Sisa Budget</div>
+                <div class="budget-sub-value green" id="bud-remaining">Rp 0</div>
+              </div>
+            </div>
+          </div>
+          <div class="budget-progress-section">
+            <div class="budget-percentage" id="bud-pct">0%</div>
+            <div class="budget-percentage-label">TERPAKAI</div>
+            <div class="progress-bar budget-progress-bar" style="height:12px;">
+              <div class="progress-fill" id="bud-bar" style="width:0%;"></div>
+            </div>
+            <p class="budget-progress-desc" id="bud-desc">Tambahkan budget untuk memulai pelacakan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Per Category -->
+      <div style="margin-top:var(--space-2xl);">
+        <div class="budget-cat-header">
+          <div class="budget-cat-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
+            </svg>
+            Budget Per Kategori
+          </div>
+          <button class="link-btn" onclick="openAddModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Budget Kategori
+          </button>
+        </div>
+
+        <div class="budget-table-card budget-table">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Kategori</th>
+                <th>Budget</th>
+                <th>Terpakai</th>
+                <th>Sisa</th>
+                <th>Progress</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="budget-tbody">
+              <!-- JS rendered -->
+            </tbody>
+          </table>
+          <div id="budget-empty" style="text-align:center;padding:40px 0;color:var(--color-text-muted);display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;display:block;opacity:.35;">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
+            </svg>
+            <p>Belum ada budget</p>
+            <p style="font-size:13px;margin-top:4px;">Klik "Tambah Budget Kategori" untuk memulai</p>
+          </div>
+
+          <div style="text-align:center;padding-top:var(--space-xl);border-top:1px solid var(--color-border-light);margin-top:var(--space-md);">
+            <button class="btn btn-outline" onclick="openAddModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Tambah Budget Kategori
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add Budget Modal -->
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal-box">
+      <div class="modal-title">Tambah Budget Kategori</div>
+      <div class="form-group">
+        <label class="form-label">Pilih Kategori</label>
+        <select id="add-bud-cat" class="form-select"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah Budget (Rp)</label>
+        <input type="number" id="add-bud-amount" class="form-input" placeholder="0" min="0">
+      </div>
+      <p style="font-size:13px;color:var(--color-text-muted);margin-top:-8px;">
+        Ingin menambah kategori baru? <a href="category.html" style="color:var(--color-primary);">Kelola Kategori →</a>
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeAddModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveBudget()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Budget Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-box">
+      <div class="modal-title">Edit Budget</div>
+      <input type="hidden" id="edit-bud-catid">
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <input type="text" id="edit-bud-catname" class="form-input" disabled style="background:var(--color-bg);">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah Budget (Rp)</label>
+        <input type="number" id="edit-bud-amount" class="form-input" min="0">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveEdit()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Total Budget Modal -->
+  <div class="modal-overlay" id="total-budget-modal">
+    <div class="modal-box">
+      <div class="modal-title">💰 Edit Total Budget Bulanan</div>
+      <p style="font-size:13px;color:var(--color-text-muted);margin-bottom:20px;line-height:1.6;">
+        Masukkan total pendapatan atau anggaran yang kamu miliki bulan ini. Kamu bisa update kapan saja jika ada pendapatan tambahan.
+      </p>
+      <div class="form-group">
+        <label class="form-label">Total Budget / Pendapatan (Rp)</label>
+        <input type="number" id="total-bud-input" class="form-input" placeholder="Contoh: 5000000" min="0">
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeTotalBudgetModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveTotalBudget()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ValerieP31/GreenTrackz" aria-label="GitHub" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    function getMonthExpenseByCategory(catId) {
+      const now = new Date();
+      return GT.getTransactions().filter(t => {
+        const d = new Date(t.date);
+        return t.category === catId && t.type === 'expense'
+          && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }).reduce((s, t) => s + t.amount, 0);
+    }
+
+    function getTotalMonthExpense() {
+      const now = new Date();
+      return GT.getTransactions().filter(t => {
+        const d = new Date(t.date);
+        return t.type === 'expense'
+          && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }).reduce((s, t) => s + t.amount, 0);
+    }
+
+    function openTotalBudgetModal() {
+      document.getElementById('total-bud-input').value = GT.getTotalBudget() || '';
+      document.getElementById('total-budget-modal').classList.add('open');
+    }
+
+    function closeTotalBudgetModal() {
+      document.getElementById('total-budget-modal').classList.remove('open');
+    }
+
+    function saveTotalBudget() {
+      const amount = parseFloat(document.getElementById('total-bud-input').value);
+      if (isNaN(amount) || amount < 0) { GT.setFieldError('total-bud-input', 'Masukkan jumlah yang valid!'); return; }
+      GT.clearFieldErrors('total-bud-input');
+      GT.saveTotalBudget(amount);
+      closeTotalBudgetModal();
+      renderBudgets();
+    }
+
+    function renderBudgets() {
+      const budgets    = GT.getBudgets();
+      const totalBudget = GT.getTotalBudget();
+      const totalUsed  = getTotalMonthExpense();
+      const tbody      = document.getElementById('budget-tbody');
+      const empty      = document.getElementById('budget-empty');
+
+      // Always update the top overview from total budget
+      const rem     = totalBudget - totalUsed;
+      const pctUsed = totalBudget > 0 ? Math.min(100, Math.round((totalUsed / totalBudget) * 100)) : 0;
+
+      document.getElementById('bud-total').textContent     = GT.formatRp(totalBudget);
+      document.getElementById('bud-used').textContent      = GT.formatRp(totalUsed);
+      document.getElementById('bud-remaining').textContent = (rem < 0 ? '-' : '') + GT.formatRp(Math.abs(rem));
+      document.getElementById('bud-remaining').style.color = rem < 0 ? 'var(--color-danger)' : '';
+      document.getElementById('bud-pct').textContent       = pctUsed + '%';
+      document.getElementById('bud-bar').style.width       = pctUsed + '%';
+
+      const barEl = document.getElementById('bud-bar');
+      barEl.className = 'progress-fill';
+      if (pctUsed >= 90) barEl.classList.add('danger');
+      else if (pctUsed >= 70) barEl.classList.add('warning');
+
+      const badge = document.getElementById('health-badge');
+      if (totalBudget === 0) {
+        badge.className = 'status-badge'; badge.style = 'background:#F1F5F9;color:#64748B;'; badge.textContent = 'Belum Diatur';
+      } else if (pctUsed < 50) {
+        badge.className = 'status-badge success'; badge.style = ''; badge.textContent = 'Sangat Sehat';
+      } else if (pctUsed < 75) {
+        badge.className = 'status-badge'; badge.style = 'background:#FEF9C3;color:#92400E;'; badge.textContent = 'Cukup Sehat';
+      } else {
+        badge.className = 'status-badge danger'; badge.style = ''; badge.textContent = 'Perlu Perhatian';
+      }
+
+      if (totalBudget === 0) document.getElementById('bud-desc').textContent = 'Klik "Edit Budget" untuk mengatur total budget bulananmu.';
+      else if (pctUsed === 0) document.getElementById('bud-desc').textContent = 'Budget siap. Belum ada pengeluaran bulan ini.';
+      else if (pctUsed < 50) document.getElementById('bud-desc').textContent = `Bagus! Baru ${pctUsed}% budget terpakai bulan ini.`;
+      else if (pctUsed < 90) document.getElementById('bud-desc').textContent = `Perhatikan pengeluaran. ${pctUsed}% budget sudah terpakai.`;
+      else document.getElementById('bud-desc').textContent = 'Hampir habis! Kurangi pengeluaran bulan ini.';
+
+      if (budgets.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      const rows = budgets.map(b => {
+        const cat  = GT.getCategoryById(b.catId);
+        const used = getMonthExpenseByCategory(b.catId);
+        const rem  = b.amount - used;
+        const pct  = Math.min(100, Math.round((used / b.amount) * 100));
+
+        const barClass = pct >= 90 ? 'danger' : pct >= 70 ? 'warning' : '';
+        const remColor = rem < 0 ? 'var(--color-danger)' : rem < b.amount * 0.2 ? 'var(--color-warning)' : 'var(--color-primary)';
+
+        return `<tr>
+          <td data-label="Kategori">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="icon-circle-sm" style="background-color:${cat.bg};">
+                ${GT.getCategoryIcon(cat.icon || 'dompet', cat.color, '14px')}
+              </div>
+              <span style="font-weight:600;">${cat.name}</span>
+            </div>
+          </td>
+          <td data-label="Budget" style="font-weight:600;">${GT.formatRp(b.amount)}</td>
+          <td data-label="Terpakai">${GT.formatRp(used)}</td>
+          <td data-label="Sisa" style="color:${remColor};font-weight:600;">${rem < 0 ? '-' : ''}${GT.formatRp(Math.abs(rem))}</td>
+          <td data-label="Progress">
+            <div class="progress-bar" style="width:120px;">
+              <div class="progress-fill ${barClass}" style="width:${pct}%;"></div>
+            </div>
+            <span style="font-size:11px;color:var(--color-text-muted);">${pct}%</span>
+          </td>
+          <td data-label="Aksi">
+            <div class="table-actions">
+              <button class="action-btn edit" onclick="openEditModal('${b.catId}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="action-btn delete" onclick="deleteBudget('${b.catId}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+
+      tbody.innerHTML = rows;
+    }
+
+    function openAddModal() {
+      const budgets = GT.getBudgets();
+      const usedIds = new Set(budgets.map(b => b.catId));
+      const cats    = GT.getCategories().filter(c => !usedIds.has(c.id));
+      const sel     = document.getElementById('add-bud-cat');
+      sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      if (cats.length === 0) {
+        sel.innerHTML = '<option value="">Semua kategori sudah ada</option>';
+      }
+      document.getElementById('add-bud-amount').value = '';
+      document.getElementById('add-modal').classList.add('open');
+    }
+
+    function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
+
+    function saveBudget() {
+      const catId  = document.getElementById('add-bud-cat').value;
+      const amount = parseFloat(document.getElementById('add-bud-amount').value);
+      if (!catId)       { GT.showToast('Pilih kategori terlebih dahulu!', 'error'); return; }
+      if (!amount || amount <= 0) { GT.setFieldError('add-bud-amount', 'Jumlah budget harus lebih dari 0!'); return; }
+      GT.clearFieldErrors('add-bud-amount');
+      const budgets = GT.getBudgets();
+      budgets.push({ catId, amount });
+      GT.saveBudgets(budgets);
+      closeAddModal();
+      renderBudgets();
+      GT.showToast('Budget kategori berhasil ditambahkan!', 'success');
+    }
+
+    function deleteBudget(catId) {
+      if (!confirm('Hapus budget ini?')) return;
+      GT.saveBudgets(GT.getBudgets().filter(b => b.catId !== catId));
+      renderBudgets();
+      GT.showToast('Budget dihapus.', 'info');
+    }
+
+    function openEditModal(catId) {
+      const b   = GT.getBudgets().find(b => b.catId === catId);
+      const cat = GT.getCategoryById(catId);
+      document.getElementById('edit-bud-catid').value   = catId;
+      document.getElementById('edit-bud-catname').value = cat.name;
+      document.getElementById('edit-bud-amount').value  = b.amount;
+      document.getElementById('edit-modal').classList.add('open');
+    }
+
+    function closeEditModal() { document.getElementById('edit-modal').classList.remove('open'); }
+
+    function saveEdit() {
+      const catId  = document.getElementById('edit-bud-catid').value;
+      const amount = parseFloat(document.getElementById('edit-bud-amount').value);
+      if (!amount || amount <= 0) { GT.setFieldError('edit-bud-amount', 'Jumlah budget harus lebih dari 0!'); return; }
+      GT.clearFieldErrors('edit-bud-amount');
+      const budgets = GT.getBudgets().map(b => b.catId === catId ? { ...b, amount } : b);
+      GT.saveBudgets(budgets);
+      closeEditModal();
+      renderBudgets();
+      GT.showToast('Budget berhasil diperbarui!', 'success');
+    }
+
+    renderBudgets();
+    GT.initMobileNav('budgeting.html');
+  </script>
+</body>
+</html>

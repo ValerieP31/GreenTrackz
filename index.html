@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GreenTrackz - Catat Pendapatan & Pengeluaranmu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Bar chart demo for homepage */
+    .demo-bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 100px;
+      margin-top: 14px;
+    }
+    .demo-bar-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .demo-bar-track {
+      width: 100%;
+      background: var(--color-primary-light);
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+    }
+    .demo-bar-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 4px 4px 0 0;
+      background: var(--color-primary);
+      transition: height 0.6s ease;
+    }
+    .demo-bar-fill.accent { background: var(--color-primary-dark); }
+    .demo-bar-label {
+      font-size: 9px;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </a>
+      <nav class="nav" style="margin-left:auto;">
+        <a href="index.html" class="nav-link active">Beranda</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="category.html" class="nav-link">Kategori</a>
+        <a href="budgeting.html" class="nav-link">Budget</a>
+        <a href="transactions.html" class="nav-link">Transaksi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Catat Pengeluaranmu dengan Mudah</h1>
+      <p class="hero-subtitle">Tanpa login. Tanpa ribet. Langsung mulai.<br>Setiap transaksi keluar? Tercatat. Terpantau. Terkendali.</p>
+      <a href="dashboard.html" class="btn btn-primary btn-lg">
+        Mulai Sekarang
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <div class="hero-features">
+        <div class="hero-feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          100% Gratis
+        </div>
+        <div class="hero-feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Data Aman
+        </div>
+        <div class="hero-feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Ekspor Mudah
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== PREVIEW CARD ====== -->
+  <div class="container">
+    <div class="preview-card">
+      <div class="preview-card-header">
+        <span class="preview-dot red"></span>
+        <span class="preview-dot yellow"></span>
+        <span class="preview-dot green"></span>
+      </div>
+      <div class="preview-card-body">
+        <!-- Chart area -->
+        <div class="preview-chart-area">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="preview-chart-title">Total Pengeluaran</div>
+              <div class="preview-chart-subtitle">Bulan ini</div>
+            </div>
+            <div class="preview-chart-value">Rp 2.450.000</div>
+          </div>
+          <!-- Actual bar chart demo -->
+          <div class="demo-bar-chart">
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:35%;"></div>
+              </div>
+              <span class="demo-bar-label">Sen</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:65%;"></div>
+              </div>
+              <span class="demo-bar-label">Sel</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:25%;"></div>
+              </div>
+              <span class="demo-bar-label">Rab</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill accent" style="height:90%;"></div>
+              </div>
+              <span class="demo-bar-label">Kam</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:50%;"></div>
+              </div>
+              <span class="demo-bar-label">Jum</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:70%;"></div>
+              </div>
+              <span class="demo-bar-label">Sab</span>
+            </div>
+            <div class="demo-bar-wrap">
+              <div class="demo-bar-track">
+                <div class="demo-bar-fill" style="height:40%;"></div>
+              </div>
+              <span class="demo-bar-label">Min</span>
+            </div>
+          </div>
+        </div>
+        <!-- Recent txn preview -->
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--color-text-primary);margin-bottom:16px;">Transaksi Terbaru</div>
+          <div class="txn-item" style="padding:10px 0;">
+            <div class="txn-left">
+              <div class="icon-circle-sm" style="background-color:#FEF3C7;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+              </div>
+              <div><div class="txn-info-name">Makan Siang</div><div class="txn-info-date">Hari ini, 12:30</div></div>
+            </div>
+            <div class="txn-right"><span class="txn-amount negative">-Rp 45.000</span></div>
+          </div>
+          <div class="txn-item" style="padding:10px 0;">
+            <div class="txn-left">
+              <div class="icon-circle-sm" style="background-color:#DBEAFE;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+              </div>
+              <div><div class="txn-info-name">Transportasi</div><div class="txn-info-date">Kemarin, 08:15</div></div>
+            </div>
+            <div class="txn-right"><span class="txn-amount negative">-Rp 25.000</span></div>
+          </div>
+          <div class="txn-item" style="padding:10px 0;border-bottom:none;">
+            <div class="txn-left">
+              <div class="icon-circle-sm" style="background-color:#D1FAE5;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div><div class="txn-info-name">Gaji Bulanan</div><div class="txn-info-date">2 hari lalu</div></div>
+            </div>
+            <div class="txn-right"><span class="txn-amount positive" style="color:var(--color-success);">+Rp 5.000.000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== FEATURES ====== -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Kenapa memilih GreenTrackz?</h2>
+        <p class="section-subtitle">Dirancang untuk memudahkan kamu mencatat pendapatan dan pengeluaran sehari-hari!</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color:var(--icon-kuliner-bg);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 class="feature-title">Pencatatan Cepat</h3>
+          <p class="feature-desc">Catat pengeluaran hanya dalam 2 detik. Antarmuka minimalis yang fokus pada kecepatan input data.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color:var(--color-primary-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <h3 class="feature-title">Tanpa Login</h3>
+          <p class="feature-desc">Mulai gunakan langsung tanpa perlu registrasi. Data Anda tersimpan aman secara lokal di perangkat Anda.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background-color:var(--icon-belanja-bg);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-title">Akses Mudah</h3>
+          <p class="feature-desc">Akses dari perangkat apapun. Desain responsif yang bekerja sempurna di desktop, tablet, maupun smartphone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-card">
+        <h2 class="cta-title">Siap mengatur keuangan<br>Anda lebih baik?</h2>
+        <p class="cta-desc">Ayo bergabung menjadi <strong>#Trackerz</strong> agar beralih ke cara pencatatan yang lebih cerdas dan cepat.</p>
+        <a href="dashboard.html" class="btn btn-primary btn-lg" style="background-color:var(--color-primary);color:white;">
+          Mulai Sekarang - Gratis
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ValerieP31/GreenTrackz" aria-label="GitHub" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>GT.initMobileNav('index.html');</script>
+</body>
+</html>

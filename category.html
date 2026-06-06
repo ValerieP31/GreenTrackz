@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kategori - GreenTrackz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 28px;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 50;
+      min-width: 120px;
+      overflow: hidden;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .dropdown-item:hover { background: var(--color-bg); }
+    .dropdown-item.danger { color: var(--color-danger); }
+    .dropdown-item svg { width: 14px; height: 14px; }
+
+    /* modal */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.4);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      width: 420px;
+      max-width: 95vw;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-title { font-size: var(--text-xl); font-weight: 700; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </a>
+      <nav class="nav" style="margin-left:auto;">
+        <a href="index.html" class="nav-link">Beranda</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="category.html" class="nav-link active">Kategori</a>
+        <a href="budgeting.html" class="nav-link">Budget</a>
+        <a href="transactions.html" class="nav-link">Transaksi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="container">
+
+      <div class="page-header">
+        <div class="page-header-inner">
+          <div>
+            <h1 class="page-title">Kategori</h1>
+            <p class="page-subtitle">Kelola dan pantau pengeluaran berdasarkan kategori.</p>
+          </div>
+          <div class="page-header-right">
+            <span class="page-header-label">Total Pengeluaran</span>
+            <span class="page-header-value" id="cat-total">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Category Form -->
+      <div class="category-form">
+        <div class="category-form-inner">
+          <div class="form-group" style="flex:2;">
+            <label class="form-label">Nama Kategori</label>
+            <input type="text" id="cat-name" class="form-input" placeholder="Contoh: Kebutuhan Rumah">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <label class="form-label">Pilih Warna</label>
+            <div class="color-picker" id="color-picker">
+              <div class="color-option active" style="background-color:#EF4444;" data-color="#EF4444" data-bg="#FEE2E2" onclick="selectColor(this)" title="Merah"></div>
+              <div class="color-option" style="background-color:#F97316;" data-color="#F97316" data-bg="#FFEDD5" onclick="selectColor(this)" title="Orange"></div>
+              <div class="color-option" style="background-color:#EAB308;" data-color="#EAB308" data-bg="#FEF9C3" onclick="selectColor(this)" title="Kuning"></div>
+              <div class="color-option" style="background-color:#22C55E;" data-color="#22C55E" data-bg="#DCFCE7" onclick="selectColor(this)" title="Hijau"></div>
+              <div class="color-option" style="background-color:#3B82F6;" data-color="#3B82F6" data-bg="#DBEAFE" onclick="selectColor(this)" title="Biru"></div>
+              <div class="color-option" style="background-color:#EC4899;" data-color="#EC4899" data-bg="#FCE7F3" onclick="selectColor(this)" title="Pink"></div>
+              <div class="color-option" style="background-color:#A855F7;" data-color="#A855F7" data-bg="#F3E8FF" onclick="selectColor(this)" title="Ungu"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="white-space:nowrap;" onclick="addCategory()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Kategori
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Grid -->
+      <div class="category-grid" id="category-grid">
+        <!-- JS rendered -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-box">
+      <div class="modal-title">Edit Kategori</div>
+      <input type="hidden" id="edit-cat-id">
+      <div class="form-group">
+        <label class="form-label">Nama Kategori</label>
+        <input type="text" id="edit-cat-name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pilih Warna</label>
+        <div class="color-picker" id="edit-color-picker">
+          <div class="color-option" style="background-color:#EF4444;" data-color="#EF4444" data-bg="#FEE2E2" onclick="selectEditColor(this)" title="Merah"></div>
+          <div class="color-option" style="background-color:#F97316;" data-color="#F97316" data-bg="#FFEDD5" onclick="selectEditColor(this)" title="Orange"></div>
+          <div class="color-option" style="background-color:#EAB308;" data-color="#EAB308" data-bg="#FEF9C3" onclick="selectEditColor(this)" title="Kuning"></div>
+          <div class="color-option" style="background-color:#22C55E;" data-color="#22C55E" data-bg="#DCFCE7" onclick="selectEditColor(this)" title="Hijau"></div>
+          <div class="color-option" style="background-color:#3B82F6;" data-color="#3B82F6" data-bg="#DBEAFE" onclick="selectEditColor(this)" title="Biru"></div>
+          <div class="color-option" style="background-color:#EC4899;" data-color="#EC4899" data-bg="#FCE7F3" onclick="selectEditColor(this)" title="Pink"></div>
+          <div class="color-option" style="background-color:#A855F7;" data-color="#A855F7" data-bg="#F3E8FF" onclick="selectEditColor(this)" title="Ungu"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeEditModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveEdit()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 5.8 17 4.5 17 4.5s-1.5 3-1 5a7 7 0 0 0 2.9-1.5s-.5 2.5-2 4c.3 3.5-2.5 6.5-5.9 9z"/>
+        </svg>
+        GreenTrackz
+      </div>
+      <div class="footer-social">
+        <a href="https://github.com/ValerieP31/GreenTrackz" aria-label="GitHub" target="_blank">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    let selectedColor = '#EF4444';
+    let selectedBg    = '#FEE2E2';
+    let editSelectedColor = '#EF4444';
+    let editSelectedBg    = '#FEE2E2';
+
+    function selectColor(el) {
+      document.querySelectorAll('#color-picker .color-option').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      selectedColor = el.dataset.color;
+      selectedBg    = el.dataset.bg;
+    }
+
+    function selectEditColor(el) {
+      document.querySelectorAll('#edit-color-picker .color-option').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      editSelectedColor = el.dataset.color;
+      editSelectedBg    = el.dataset.bg;
+    }
+
+    function getCategoryTxnCount(catId) {
+      const now = new Date();
+      return GT.getTransactions().filter(t => {
+        const d = new Date(t.date);
+        return t.category === catId && t.type === 'expense'
+          && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }).length;
+    }
+
+    function getCategoryTotal(catId) {
+      const now = new Date();
+      return GT.getTransactions().filter(t => {
+        const d = new Date(t.date);
+        return t.category === catId && t.type === 'expense'
+          && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }).reduce((s, t) => s + t.amount, 0);
+    }
+
+    function renderCategories() {
+      const cats = GT.getCategories();
+      const grid = document.getElementById('category-grid');
+
+      // Update total
+      const total = cats.reduce((s, c) => s + getCategoryTotal(c.id), 0);
+      document.getElementById('cat-total').textContent = GT.formatRp(total);
+
+      grid.innerHTML = cats.map(cat => {
+        const count = getCategoryTxnCount(cat.id);
+        const total = getCategoryTotal(cat.id);
+        return `
+        <div class="category-card" id="catcard-${cat.id}">
+          <div class="category-card-top">
+            <div class="category-card-icon" style="background-color:${cat.bg};">
+              ${GT.getCategoryIcon(cat.icon || 'dompet', cat.color, '22px')}
+            </div>
+            <div style="position:relative;">
+              <button class="category-card-menu" aria-label="Menu" onclick="toggleMenu('menu-${cat.id}', event)">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;">
+                  <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
+                </svg>
+              </button>
+              <div class="dropdown-menu" id="menu-${cat.id}">
+                <div class="dropdown-item" onclick="openEditModal('${cat.id}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </div>
+                <div class="dropdown-item danger" onclick="deleteCategory('${cat.id}')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Hapus
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="category-card-title">${cat.name}</h3>
+          <div class="category-card-label">Total Pengeluaran</div>
+          <div class="category-card-amount">${GT.formatRp(total)}</div>
+          <div class="category-card-footer">
+            <span class="category-card-count" style="background-color:${cat.bg};color:${cat.color};">${count} Transaksi</span>
+          </div>
+        </div>`;
+      }).join('') + `
+        <div class="category-add-card" onclick="document.getElementById('cat-name').focus()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Tambah Kategori</span>
+        </div>`;
+    }
+
+    function toggleMenu(id, e) {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown-menu').forEach(m => { if (m.id !== id) m.classList.remove('open'); });
+      document.getElementById(id).classList.toggle('open');
+    }
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+    });
+
+    function addCategory() {
+      const name = document.getElementById('cat-name').value.trim();
+      if (!name) { GT.setFieldError('cat-name', 'Nama kategori tidak boleh kosong!'); return; }
+      GT.clearFieldErrors('cat-name');
+      const cats = GT.getCategories();
+      const id = 'cat_' + Date.now();
+      cats.push({ id, name, color: selectedColor, bg: selectedBg, icon: 'dompet' });
+      GT.saveCategories(cats);
+      document.getElementById('cat-name').value = '';
+      renderCategories();
+      GT.showToast('Kategori berhasil ditambahkan!', 'success');
+    }
+
+    function deleteCategory(id) {
+      if (!confirm('Hapus kategori ini?')) return;
+      let cats = GT.getCategories().filter(c => c.id !== id);
+      GT.saveCategories(cats);
+      renderCategories();
+      GT.showToast('Kategori dihapus.', 'info');
+    }
+
+    function openEditModal(id) {
+      document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('open'));
+      const cat = GT.getCategoryById(id);
+      document.getElementById('edit-cat-id').value = id;
+      document.getElementById('edit-cat-name').value = cat.name;
+      // pre-select color
+      editSelectedColor = cat.color;
+      editSelectedBg = cat.bg;
+      document.querySelectorAll('#edit-color-picker .color-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.color === cat.color);
+      });
+      document.getElementById('edit-modal').classList.add('open');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+    }
+
+    function saveEdit() {
+      const id   = document.getElementById('edit-cat-id').value;
+      const name = document.getElementById('edit-cat-name').value.trim();
+      if (!name) { GT.setFieldError('edit-cat-name', 'Nama tidak boleh kosong!'); return; }
+      GT.clearFieldErrors('edit-cat-name');
+      const cats = GT.getCategories().map(c => {
+        if (c.id !== id) return c;
+        return { ...c, name, color: editSelectedColor, bg: editSelectedBg };
+      });
+      GT.saveCategories(cats);
+      closeEditModal();
+      renderCategories();
+      GT.showToast('Kategori berhasil diperbarui!', 'success');
+    }
+
+    renderCategories();
+    GT.initMobileNav('category.html');
+    document.getElementById('cat-name').addEventListener('input', () => GT.clearFieldErrors('cat-name'));
+  </script>
+</body>
+</html>
